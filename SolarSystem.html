@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8"/> 
+<title>Solar System</title>
+<script src="js/three.min.js"></script>
+
+<script>
+    var scene, camera, renderer;  // Three.js rendering basics.
+
+    var canvas;  // The canvas on which the image is rendered.
+
+    var sun, earth, moon, earthMoon;
+
+    var earthOrbitAngle = 0,
+        earthOrbitRadius = 105,
+        earthOrbitSpeed = 0.4,
+
+        moonOrbitAngle = 0,
+        moonOrbitRadius = 25,
+        moonOrbitSpeed = 3;
+
+    // Create the scene. This function is called once, as soon as the page loads.
+    // The renderer has already been created before this function is called.
+    function createWorld() {
+        
+        renderer.setClearColor(0); // Set background color (0, or 0x000000, is black).
+        scene = new THREE.Scene(); // Create a new scene which we can add objects to.
+
+        // create some lights and add them to the scene.
+        scene.add( new THREE.DirectionalLight( 0xffffff, 0.4 ) ); // dim light shining from above
+        var viewpointLight = new THREE.DirectionalLight( 0xffffff, 0.8 );  // a light to shine in the direction the camera faces
+        viewpointLight.position.set(0,0,1);  // shines down the z-axis
+        scene.add(viewpointLight);
+    
+        // create a camera, sitting on the positive z-axis.  The camera is not part of the scene.
+        camera = new THREE.PerspectiveCamera(45, canvas.width/canvas.height, 0.1, 500);
+        camera.position.z = 300; // pull back the camera
+
+        // sun
+        var sunGeometry = new THREE.SphereGeometry(60, 50, 50);
+        var sunMaterial = new THREE.MeshBasicMaterial({color: "yellow"});
+        sun = new THREE.Mesh(sunGeometry, sunMaterial);
+        scene.add(sun);
+
+        // container for earth and moon
+        earthMoon = new THREE.Object3D();
+        scene.add(earthMoon);
+        //earth
+        var earthGeometry = new THREE.SphereGeometry(15, 50, 50);
+        var earthMaterial = new THREE.MeshBasicMaterial({color: "cyan"});
+        earth = new THREE.Mesh(earthGeometry, earthMaterial);
+        earthMoon.add(earth);
+        //moon
+        var moonGeometry = new THREE.SphereGeometry(5, 50, 50);
+        var moonMaterial = new THREE.MeshBasicMaterial({color: "white"});
+        moon = new THREE.Mesh(moonGeometry, moonMaterial);
+        earthMoon.add(moon);
+    }
+
+    // Render the scene. This is called for each frame of the animation.
+    function render() {
+        requestAnimationFrame( render );
+
+        // rotate sun
+        sun.rotation.y += 0.005;
+
+        // orbit earth around sun
+        earthMoon.position.x = -Math.cos(earthOrbitAngle * Math.PI/180) * earthOrbitRadius; 
+        earthMoon.position.z = Math.sin(earthOrbitAngle * Math.PI/180) * earthOrbitRadius;
+        earthOrbitAngle += earthOrbitSpeed;
+        // rotate earth
+        earth.rotation.y += 0.01;
+
+        // orbit moon around earth
+        moon.position.x = -Math.cos(moonOrbitAngle * Math.PI/180) * moonOrbitRadius;
+        moon.position.z = Math.sin(moonOrbitAngle * Math.PI/180) * moonOrbitRadius;
+        moonOrbitAngle += moonOrbitSpeed;
+        // rotate moon
+        moon.rotation.y += 0.01;
+
+        renderer.render(scene, camera);
+    }
+
+    //----------------------------------------------------------------------------------
+
+    // The init() function is called by the onload event when the document has loaded.
+    function init() {
+        try {
+            canvas = document.getElementById("glcanvas");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            renderer = new THREE.WebGLRenderer( { canvas: canvas, antialias: true} );
+        }
+        catch (e) {
+            document.getElementById("canvas-holder").innerHTML = "<h3><b>WebGL is not available.</b><h3>";
+            return;
+        }
+    
+        // create world and render scene
+        createWorld();
+        render();
+    }
+
+</script>
+
+</head>
+<body onload="init()">
+<div id="canvas-holder">
+    <canvas id="glcanvas" width="600" height="400"></canvas>
+</div>
+</body>
+</html>
