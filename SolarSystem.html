@@ -77,11 +77,25 @@
         renderer.setClearColor(0); // Set background color (0, or 0x000000, is black).
         scene = new THREE.Scene(); // Create a new scene which we can add objects to.
 
-        // create some lights and add them to the scene.
-        scene.add( new THREE.DirectionalLight( 0xffffff, 0.4 ) ); // dim light shining from above
-        var viewpointLight = new THREE.DirectionalLight( 0xffffff, 0.8 );  // a light to shine in the direction the camera faces
-        viewpointLight.position.set(0,0,1);  // shines down the z-axis
-        scene.add(viewpointLight);
+        // create lights for the sun
+        var frontLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
+        var backLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
+        var rightSideLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
+        var leftSideLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
+        var topLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
+        var bottomLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
+        frontLight.position.set(0, 0, 1);
+        backLight.position.set(0, 0, -1);
+        rightSideLight.position.set(1, 0, 0);
+        leftSideLight.position.set(-1, 0, 0);
+        topLight.position.set(0, 1, 0);
+        bottomLight.position.set(0, -1, 0);
+        scene.add(frontLight);
+        scene.add(backLight);
+        scene.add(rightSideLight);
+        scene.add(leftSideLight);
+        scene.add(bottomLight);
+        scene.add(topLight);
     
         // create a camera, sitting on the positive z-axis.  The camera is not part of the scene.
         camera = new THREE.PerspectiveCamera(45, canvas.width/canvas.height, 0.1, 7500);
@@ -90,8 +104,8 @@
         // orbit camera controls
         controls = new THREE.OrbitControls(camera);
 
-        // point light
-        pointLight = new THREE.PointLight("orange", 10);
+        // create a point light to light up the planets
+        pointLight = new THREE.PointLight("orange", 2.5);
         pointLight.position.set(0, 0, 0);
         scene.add(pointLight);
 
