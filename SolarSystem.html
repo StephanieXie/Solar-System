@@ -1,11 +1,16 @@
+<!-- 
+< Stephanie Xie >
+< Mouse commands: press left & drag to rotate, scroll wheel to zoom, press right & drag to move. >
+-->
 <!DOCTYPE html>
 <head>
 <meta charset="utf-8"/> 
 <title>Solar System</title>
 <script src="js/three.min.js"></script>
+<script src="js/OrbitControls.js"></script>
 
 <script>
-    var scene, camera, renderer;  // Three.js rendering basics.
+    var scene, camera, renderer, controls;  // Three.js rendering basics.
 
     var canvas;  // The canvas on which the image is rendered.
 
@@ -81,6 +86,9 @@
         // create a camera, sitting on the positive z-axis.  The camera is not part of the scene.
         camera = new THREE.PerspectiveCamera(45, canvas.width/canvas.height, 0.1, 7500);
         camera.position.z = 5000; // pull back the camera
+
+        // orbit camera controls
+        controls = new THREE.OrbitControls(camera);
 
         // point light
         pointLight = new THREE.PointLight("orange", 10);
@@ -182,6 +190,7 @@
     // Render the scene. This is called for each frame of the animation.
     function render() {
         requestAnimationFrame( render );
+        controls.update();
 
         // rotate sun
         sun.rotation.y += sunRotationSpeed;
