@@ -1,2 +1,4 @@
 # Solar-System
-Solar system created using WebGL and Three.js
+Scale model of the solar system. Created with WebGL and Three.js.
+Mouse commands: press left & drag to rotate, scroll wheel to zoom, press right & drag to move.
+
