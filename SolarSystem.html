@@ -7,6 +7,7 @@
 <title>Solar System</title>
 <script src="js/three.min.js"></script>
 <script src="js/OrbitControls.js"></script>
+<script src="js/KeyboardState.js"></script>
 
 <script>
     var scene, camera, renderer, controls;  // Three.js rendering basics.
@@ -18,6 +19,10 @@
     var sun, mercury, venus, earth, moon, earthMoon, mars, jupiter, saturnBody, saturnRings, saturn, uranus, neptune, pluto;
 
     var planets = [];
+
+    var pause = false;
+
+    var keyboard = new KeyboardState();
 
     var sunRotationSpeed = 0.00025,
 
@@ -289,16 +294,24 @@
         }
     }
 
+    function update() {
+        controls.update();
+        keyboard.update();
+        // Pause/unpause animation when spacebar is pressed
+        if (keyboard.down("space")) {
+            pause = !pause;
+        }
+    }
+
     // Render the scene. This is called for each frame of the animation.
     function render() {
         requestAnimationFrame( render );
-        controls.update();
-
+        update();
+        if (pause) return;
         for (var i=0; i<11; i++) {
             animatePlanet(planets[i])
         }
         renderer.render(scene, camera);
-
     }
 
     //----------------------------------------------------------------------------------
